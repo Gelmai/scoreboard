@@ -58,6 +58,30 @@ class Controller extends GetxController with GetTickerProviderStateMixin {
     }
   }
 
+  void addItem(int index, RxString name) {
+    playerList.insert(
+        index,
+        Player(
+            index: playerList.length - 1, name: name, score: 0, adjustment: 0));
+    playerCount++;
+    currentListKey.currentState!
+        .insertItem(index, duration: const Duration(milliseconds: 500));
+  }
+
+  void removeItem(int index) {
+    final RxString nameToBeRemoved = playerList[index].name;
+
+    playerList.removeAt(index);
+    playerCount--;
+    currentListKey.currentState!.removeItem(index, (_, animation) {
+      return SizeTransition(
+        sizeFactor: animation,
+        child: PlayerTile(
+            index: index, startTimer: () {}, nameToBeRemoved: nameToBeRemoved),
+      );
+    }, duration: const Duration(milliseconds: 500));
+  }
+
   void resetList() {
     for (var i = 0; i < playerList.length; i++) {
       playerList[i].score = 0;
@@ -107,25 +131,6 @@ class Controller extends GetxController with GetTickerProviderStateMixin {
     playerList.sort(compareScore);
     playerList.refresh();
     await flipVerticallyAnimationController.forward();
-  }
-
-  void addItem(int index, RxString name) {
-    playerList.insert(
-        index, Player(index: playerCount, name: name, score: 0, adjustment: 0));
-    playerCount++;
-    currentListKey.currentState!
-        .insertItem(index, duration: const Duration(milliseconds: 500));
-  }
-
-  void removeItem(int index) {
-    currentListKey.currentState!.removeItem(index, (_, animation) {
-      return SizeTransition(
-        sizeFactor: animation,
-        child: PlayerTile(index: index, startTimer: () {}),
-      );
-    });
-    playerList.removeAt(index);
-    playerCount--;
   }
 }
 
