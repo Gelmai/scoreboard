@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'main.dart';
+import 'controllers.dart';
 
 class PlayerDetail extends StatelessWidget {
   PlayerDetail({super.key, required this.index});
@@ -10,7 +10,7 @@ class PlayerDetail extends StatelessWidget {
 
   @override
   Widget build(context) {
-    nameFieldController.text = c.playerList[index].name;
+    nameFieldController.text = c.playerList[index].name.value;
 
     return Scaffold(
         appBar: AppBar(
@@ -36,12 +36,19 @@ class PlayerDetail extends StatelessWidget {
                       child: const Text("Cancel"), onPressed: () => Get.back()),
                   const SizedBox(width: 20.0),
                   ElevatedButton(
+                      child: const Text("Delete"),
+                      onPressed: () {
+                        c.removeItem(index);
+                        Get.back();
+                      }),
+                  const SizedBox(width: 20.0),
+                  ElevatedButton(
                       child: const Text("Done"),
                       onPressed: () {
                         c.playerList[index].name =
-                            nameFieldController.text.toUpperCase();
-                        //nameFieldController.dispose();
-                        Get.offAll(() => Home());
+                            nameFieldController.text.toUpperCase().obs;
+                        c.playerList.refresh();
+                        Get.back();
                       }),
                 ],
               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'main.dart';
+import 'controllers.dart';
 
 class AddPlayer extends StatelessWidget {
   AddPlayer({super.key, required this.sortList, required this.startTimer});
@@ -37,15 +37,9 @@ class AddPlayer extends StatelessWidget {
                   ElevatedButton(
                       child: const Text("Done"),
                       onPressed: () {
-                        c.playerList.add(Player(
-                            index: c.playerCount,
-                            name: nameFieldController.text.toUpperCase(),
-                            score: 0,
-                            adjustment: 0));
-                        //nameFieldController.dispose();
-                        c.playerCount++;
-                        startTimer();
-                        Get.offAll(() => Home());
+                        c.addItem(c.playerCount,
+                            nameFieldController.text.toUpperCase().obs);
+                        Get.back();
                       }),
                 ],
               ),
